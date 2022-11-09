@@ -14,8 +14,6 @@
 
 // Execute `rustlings hint hashmaps3` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
-
 use std::collections::HashMap;
 
 // A structure to store team name and its goal details.
@@ -35,6 +33,37 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         let team_1_score: u8 = v[2].parse().unwrap();
         let team_2_name = v[1].to_string();
         let team_2_score: u8 = v[3].parse().unwrap();
+
+        let win_team = scores.get(&team_1_name);
+        let team1 = Team {
+            name: team_1_name.to_string(),
+            goals_scored: team_1_score,
+            goals_conceded: team_2_score,
+        };
+        if win_team.is_none() {
+            scores.insert(team_1_name, team1);
+        } else {
+            scores.insert(team_1_name, Team {
+                name: team1.name,
+                goals_scored: win_team.unwrap().goals_scored + team_1_score,
+                goals_conceded: win_team.unwrap().goals_conceded + team_2_score,
+            });
+        }
+        let lose_team = scores.get(&team_2_name);
+        let team2 = Team {
+            name: team_2_name.to_string(),
+            goals_scored: team_2_score,
+            goals_conceded: team_1_score,
+        };
+        if lose_team.is_none() {
+            scores.insert(team_2_name, team2);
+        } else {
+            scores.insert(team_2_name, Team {
+                name: team2.name,
+                goals_scored: lose_team.unwrap().goals_scored + team_2_score,
+                goals_conceded: lose_team.unwrap().goals_conceded + team_1_score,
+            });
+        }
         // TODO: Populate the scores table with details extracted from the
         // current line. Keep in mind that goals scored by team_1
         // will be number of goals conceded from team_2, and similarly
